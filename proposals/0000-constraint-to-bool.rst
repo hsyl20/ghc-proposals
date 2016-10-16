@@ -220,9 +220,70 @@ provided, otherwise a coercion ``Fulfilled c ~ False`` is provided. ``c``
 mustn't be used to provide evidences for other constraints. Solving ``c``
 mustn't trigger any warning or error.
 
-I already have a working proof-of-concept implementation:
-https://github.com/hsyl20/ghc/compare/constraint-to-bool Examples above have
-been sucessfully tested with it. The interesting function is
+Soundness checking
+~~~~~~~~~~~~~~~~~~
+
+Suppose we want to reduce ``Fulfilled c`` in a module ``M``.  When GHC tries to
+solve the constraint ``c``, it can return 3 different results:
+1. Solvable
+2. Unsolvable
+3. Unsure ``c'``: where ``c'`` is a simplification of ``c``.
+
+Case 1:
+``c`` is solvable and we coerce ``Fulfilled c ~ True``. Every module importing
+M also imports the evidences that make ``c`` solvable.
+
+Case 2:
+``c`` is unsolvable and we coerce ``Fulfilled c ~ False``.  Every module
+importing M also imports the evidences that make ``c`` unsolvable.
+
+Case 3:
+``c`` may be solvable or not and we coerce ``Fulfilled c ~ False``. Every
+module importing ``M`` may provide new evidences that make ``c`` solvable
+leading to unsoundness. Hence we export ``c'`` in the module
+``unwantedConstraints`` set.  Now for a module ``N`` importing ``M``, we need
+to try to solve each unwanted constraint ``c`` of ``M`` in the context of
+``N``:
+
+Case 3.1:
+An unwanted constraint ``c`` has become solvable: we trigger an error. E.g.,
+"Imported module M has assumed the following constraint would be unsolvable
+while it isn't: c.  Use -XIncoherentUnwantedConstraints to allow the import of
+M"
+
+Case 3.2:
+``c`` is now proved to be unsolvable. We don't add it to the
+``unwantedConstraints`` set of ``N``.
+
+Case 3.3:
+``c`` is still neither solved nor unsolved. We add ``c'`` to the
+``unwantedConstraints`` set of ``N``.
+
+Unsoundness example
+~~~~~~~~~~~~~~~~~~~
+module A where
+class C a
+f :: Fulfilled (C Bool) ~ True => a -> b
+f x = x
+
+module B where
+import A
+instance C Bool
+g :: a -> b
+g = f
+
+Recursive constraints
+~~~~~~~~~~~~~~~~~~~~~
+
+t ~ (Fulfilled t ~ False)
+
+Detect and disallow?
+
+Proof-of-concept
+~~~~~~~~~~~~~~~~
+I already have a working proof-of-concept implementation (without soundness
+checking): https://github.com/hsyl20/ghc/compare/constraint-to-bool Examples
+above have been sucessfully tested with it. The interesting function is
 ``tcFulfilConstraint``. Comments and code reviews are welcome.
 
 Drawbacks
