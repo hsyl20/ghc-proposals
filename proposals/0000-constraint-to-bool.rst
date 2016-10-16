@@ -227,7 +227,10 @@ Suppose we want to reduce ``Fulfilled c`` in a module ``M``.  When GHC tries to
 solve the constraint ``c``, it can return 3 different results:
 1. Solvable
 2. Unsolvable
-3. Unsure ``c'``: where ``c'`` is a simplification of ``c``.
+3. Unsure ``c'``: where ``c'`` is a simplification of ``c``. This case happens
+with constraints involving open things (e.g., open type families, type classes)
+for which some instances may be added in the context (e.g., open type family
+instances, orphan type class instances).
 
 Case 1:
 ``c`` is solvable and we coerce ``Fulfilled c ~ True``. Every module importing
@@ -247,9 +250,9 @@ to try to solve each unwanted constraint ``c`` of ``M`` in the context of
 
 Case 3.1:
 An unwanted constraint ``c`` has become solvable: we trigger an error. E.g.,
-"Imported module M has assumed the following constraint would be unsolvable
-while it isn't: c.  Use -XIncoherentUnwantedConstraints to allow the import of
-M"
+"Imported module M has already assumed the following constraint would be
+unsolvable while it isn't: c.  Use -XIncoherentUnwantedConstraints to allow the
+import of M."
 
 Case 3.2:
 ``c`` is now proved to be unsolvable. We don't add it to the
@@ -278,6 +281,8 @@ Recursive constraints
 t ~ (Fulfilled t ~ False)
 
 Detect and disallow?
+
+TODO: interaction with IncoherentInstances
 
 Proof-of-concept
 ~~~~~~~~~~~~~~~~
