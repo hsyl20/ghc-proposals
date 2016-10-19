@@ -207,7 +207,6 @@ associated to the first fulfilled constraint (i.e., "showHTML", "oldShow" or
 ``ToHTML`` instance.
 
 
-
 Proposed Change
 ---------------
 
@@ -264,21 +263,27 @@ Case 3.3:
 
 Unsoundness example
 ~~~~~~~~~~~~~~~~~~~
-module A where
-class C a
-f :: Fulfilled (C Bool) ~ True => a -> b
-f x = x
 
-module B where
-import A
-instance C Bool
-g :: a -> b
-g = f
+Here is an unsound example (provided by @ezyang)::
+   module A where
+   class C a
+   f :: Fulfilled (C Bool) ~ True => a -> b
+   f x = x
+
+   module B where
+   import A
+   instance C Bool
+   g :: a -> b
+   g = f
+
+An orphan ``instance C Bool`` is defined in ``module B``. If we don't check for
+unwanted constraints, we will face a coherence issue because ``Fulfilled (C
+Bool)`` was assumed to be ``False`` in ``module A``.
 
 Recursive constraints
 ~~~~~~~~~~~~~~~~~~~~~
 
-t ~ (Fulfilled t ~ False)
+t ~ (Fulfilled (t ~ False))
 
 Detect and disallow?
 
@@ -294,7 +299,8 @@ above have been sucessfully tested with it. The interesting function is
 Drawbacks
 ---------
 
-I can't think of any drawback.
+Soundness checking forces us to propagate unwanted constraints between modules.
+
 
 Alternatives
 ------------
