@@ -348,10 +348,10 @@ importing ``M`` also imports the evidences that make ``c`` insoluble.
 Case 3:
 ``c`` may be fulfilled in another type-checking context, but not in this one, so
 we coerce ``Fulfilled c ~ False``. Every module importing ``M`` may provide new
-evidences that make ``c`` fulfilled leading to unsoundness. **Hence we export
+evidences that make ``c`` fulfilled leading to unsoundness. Hence we export
 ``c'`` in a module ``unwantedConstraints`` set (exported in the module
 interface). Now for a module ``N`` importing ``M``, we need to try to fulfil
-each unwanted constraint ``c`` of ``M`` in the context of ``N``**:
+each unwanted constraint ``c`` of ``M`` in the context of ``N``:
 
 Case 3.1:
 An unwanted constraint ``c`` has become fulfilled: we trigger an error. E.g.,
