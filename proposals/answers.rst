@@ -61,7 +61,8 @@ would test in sequence:
 3) If (Fulfilled (Generic a)), then use ``genericPeek @Struct``
 4) TypeError
 
-Where::
+where::
+
    class HasStorageMethod a where
       type StorageMethod a :: *
 
