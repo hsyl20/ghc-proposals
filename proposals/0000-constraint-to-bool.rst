@@ -420,7 +420,7 @@ time, the program compiles and we can show that ``t ~ False``.
 Notwithstanding the difference between the two examples (one compiles and the
 other one doesn't), what happens is that the reduction of a ``Fulfilled c``
 makes the type-checking context change. In this new context, ``Fulfilled c`` may
-have been reduced differently! To check this, once we have coerced ``Fulfilled
+have been reduced differently! To check this, once we have reduced ``Fulfilled
 c``, we need to check that ``Fulfilled c`` still reduces in the same way.
 
 This is not implemented yet.
