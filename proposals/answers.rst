@@ -66,4 +66,4 @@ where::
    class HasStorageMethod a where
       type StorageMethod a :: *
 
-
+And i can do the same thing for a ``SizeOf'`` type family!
