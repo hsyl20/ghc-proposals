@@ -2,12 +2,14 @@
 
 My real world example:
 Current ``Storable`` class is defined as::
+
    class Storable a where
       sizeOf :: a -> Int
       peek   :: Ptr a -> IO a
       ...
 
 We can automatically generate instances from a ``Generic`` instance (cf c-storable-deriving package) with default signatures::
+
    class Storable a where
       sizeOf :: a -> Int
       peek   :: Ptr a -> IO a
