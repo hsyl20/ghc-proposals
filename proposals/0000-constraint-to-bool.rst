@@ -327,8 +327,11 @@ context. I.e., ``c`` is not included in the current type-checking context.
 
 Suppose we want to reduce ``Fulfilled c`` in a module ``M``.  When GHC tries to
 simplify the constraint ``c``, it can return 3 different results:
+
 1) Fulfilled: ``c`` is simplified into an empty constraint
+
 2) Insoluble (e.g., found ``Int ~ Bool``)
+
 3) Unsure: ``c`` is simplified into a new constraint ``c'``. This case happens
 with constraints involving open things (e.g., open type families, type classes)
 for which some evidences may be added in another context (e.g., open type family
