@@ -371,6 +371,7 @@ Unsoundness example
 ~~~~~~~~~~~~~~~~~~~
 
 Here is an unsound example (provided by @ezyang)::
+
    module A where
 
    class C a
@@ -402,6 +403,7 @@ Recursive examples
 ~~~~~~~~~~~~~~~~~~
 
 Recursive example (provided by @clintonmead)::
+
    forall t. t ~ Fulfilled (t ~ False)
 
 ``t ~ False`` doesn't simplify so we are in case 3 and we coerce ``Fulfilled (t ~ False) ~
@@ -409,6 +411,7 @@ False``. However, GHC seems to check the constraint again in the current
 implementation because it reports: "Couldn't match type ‘'False’ with ‘'True’".
 
 Variant::
+
    forall t. t ~ Fulfilled (t ~ True)
 
 Similarily in this case we coerce ``Fulfilled (t ~ True) ~ False``. However this
