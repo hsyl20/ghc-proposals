@@ -55,13 +55,14 @@ add default signatures to a class without modifying it, overload them, mix
 them with default methods, etc.). So with the proposal, I wouldn't use
 them but instead I could write a ``peek' :: Ptr a -> IO a`` method that
 would test in sequence:
-1. If (Fulfilled (Storable a)), then use Storable's peek method
-2. If (Fulfilled (Generic a, HasStorageMethod a)), then use ``genericPeek @(StorageMethod a)``, where::
 
+1) If (Fulfilled (Storable a)), then use Storable's peek method
+2) If (Fulfilled (Generic a, HasStorageMethod a)), then use ``genericPeek @(StorageMethod a)``
+3) If (Fulfilled (Generic a)), then use ``genericPeek @Struct``
+4) TypeError
+
+Where::
    class HasStorageMethod a where
       type StorageMethod a :: *
-
-3. If (Fulfilled (Generic a)), then use ``genericPeek @Struct``
-4. TypeError
 
 
