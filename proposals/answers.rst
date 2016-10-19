@@ -63,7 +63,28 @@ would test in sequence:
 
 where::
 
+   data Struct
+   data PackedStruct
+
    class HasStorageMethod a where
       type StorageMethod a :: *
 
-And i can do the same thing for a ``SizeOf'`` type family!
+   class GStorable m r where
+      genericPeek :: Ptr (r a) -> IO (r a)
+
+   instance GStorable Struct U1 where ...
+   instance GStorable Struct (a :*: b) where ...
+
+   instance GStorable PackedStruct U1 where ...
+   instance GStorable PackedStruct (a :*: b) where ...
+
+
+And i can do the same thing for a ``SizeOf'`` type family::
+
+   type SizeOf' a = SelectConstraint
+         '[ Assoc (Storable a) (SizeOf a)
+          , Assoc (Generic a, HasStorageMethod a)
+               (GenericSizeOf (StorageMethod a) a)
+          , Assoc (Generic a) (GenericSizeOf 'Struct a)
+          , TypeError ...
+          ]
