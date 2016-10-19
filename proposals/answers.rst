@@ -33,7 +33,7 @@ AFAIK, we don't have the equivalent of default signatures for associated type fa
       type SizeOf a :: Nat
       default type (Generic a, GStorable (Rep a)) => SizeOf a = GenericSizeOf a
 
-Issue 2) I want to support several ways to store a datat type, namely ``Struct`` and ``PackedStruct``, with ``Struct`` being the default. A solution would be to allow several default signatures, but it isn't supported either (see #7395)::
+Issue 2) I want to support several ways to store a data type, namely ``Struct`` and ``PackedStruct``, with ``Struct`` being the default. A solution would be to allow several default signatures, but it isn't supported either (see #7395)::
 
    class Storable a where
       peek :: Ptr a -> IO a
