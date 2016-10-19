@@ -333,9 +333,9 @@ simplify the constraint ``c``, it can return 3 different results:
 2) Insoluble (e.g., found ``Int ~ Bool``)
 
 3) Unsure: ``c`` is simplified into a new constraint ``c'``. This case happens
-with constraints involving open things (e.g., open type families, type classes)
-for which some evidences may be added in another context (e.g., open type family
-instances, orphan type class instances).
+   with constraints involving open things (e.g., open type families, type classes)
+   for which some evidences may be added in another context (e.g., open type family
+   instances, orphan type class instances).
 
 Case 1:
 ``c`` is fulfilled and we coerce ``Fulfilled c ~ True``. Every module importing
