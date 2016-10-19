@@ -22,16 +22,19 @@ We can automatically generate instances from a ``Generic`` instance (cf c-storab
       ...
 
 1) I want to replace ``sizeOf`` with a type-level literal (to compute offsets at compile time, among other things)::
+
    class Storable a where
       type SizeOf a :: Nat
       peek   :: Ptr a -> IO a
 
 AFAIK, we don't have the equivalent of default signatures for associated type families, so I can't define::
+
    class Storable a where
       type SizeOf a :: Nat
       default type (Generic a, GStorable (Rep a)) => SizeOf a = ComputeSizeOf a
 
 2) I want to support several ways to store a datat type, namely ``Struct`` and ``PackedStruct``, with ``Struct`` being the default. A solution would be to allow several default signatures, but it isn't supported either (see #7395)::
+
    class Storable a where
       peek :: Ptr a -> IO a
 
@@ -54,8 +57,10 @@ them but instead I could write a ``peek' :: Ptr a -> IO a`` method that
 would test in sequence:
 1. If (Fulfilled (Storable a)), then use Storable's peek method
 2. If (Fulfilled (Generic a, HasStorageMethod a)), then use ``genericPeek @(StorageMethod a)``, where::
+
    class HasStorageMethod a where
       type StorageMethod a :: *
+
 3. If (Fulfilled (Generic a)), then use ``genericPeek @Struct``
 4. TypeError
 
